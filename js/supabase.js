@@ -6,8 +6,8 @@
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-const SUPABASE_URL  = 'https://rduzoxmmikeoxxffyntr.supabase.co';   // <-- cambiar
-const SUPABASE_KEY  = 'sb_publishable_mepdpPCSUovQjf_oC1Y76Q_7vj1Mpsq';                       // <-- cambiar
+const SUPABASE_URL  = 'https://syqxuuirepbqqjpxwbby.supabase.co';   // <-- cambiar
+const SUPABASE_KEY  = 'sb_publishable_gBLZGX9AAEBbsz5zKhIV2w_ODMDk-LZ';                       // <-- cambiar
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
