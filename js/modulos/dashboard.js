@@ -49,26 +49,32 @@ async function cargarCuentas(user) {
 
   if (!cuentas || cuentas.length === 0) {
     container.innerHTML = `
-      <div class="col-12">
-        <div class="alert alert-info">No se encontraron cuentas asociadas.</div>
+      <div class="col-12 fade-in-up delay-1">
+        <div class="alert alert-info border-0 shadow-sm"><i class="bi bi-info-circle me-2"></i>No se encontraron cuentas asociadas.</div>
       </div>`;
     return;
   }
 
-  container.innerHTML = cuentas.map(c => `
-    <div class="col-12 col-md-6 col-xl-4">
-      <div class="card card-saldo p-3 ${c.tipo}">
-        <div class="d-flex justify-content-between align-items-start mb-2">
+  container.innerHTML = cuentas.map((c, idx) => `
+    <div class="col-12 col-md-6 col-xl-4 fade-in-up" style="animation-delay: ${0.1 * (idx + 1)}s">
+      <div class="card p-4 card-saldo-fx ${c.tipo} h-100">
+        <div class="d-flex justify-content-between align-items-start mb-3">
           <div>
-            <span class="badge ${c.tipo === 'corriente' ? 'bg-primary' : 'bg-success'} mb-1">
+            <span class="badge ${c.tipo === 'corriente' ? 'bg-primary' : 'bg-success'} mb-2 px-2 py-1 shadow-sm">
+              <i class="bi ${c.tipo === 'corriente' ? 'bi-briefcase' : 'bi-piggy-bank'} me-1"></i>
               ${c.tipo === 'corriente' ? 'Cuenta Corriente' : 'Cuenta de Ahorro'}
             </span>
-            <div class="cuenta-numero">${maskCuenta(c.numero_cuenta)}</div>
+            <div class="cuenta-numero font-monospace text-muted mt-1">${maskCuenta(c.numero_cuenta)}</div>
           </div>
-          <i class="bi ${c.tipo === 'corriente' ? 'bi-credit-card' : 'bi-piggy-bank'} fs-3 text-muted"></i>
+          <div class="rounded-circle d-flex align-items-center justify-content-center bg-white shadow-sm" style="width:45px;height:45px">
+             <i class="bi ${c.tipo === 'corriente' ? 'bi-credit-card' : 'bi-safe'} fs-4 ${c.tipo === 'corriente' ? 'text-primary' : 'text-success'}"></i>
+          </div>
         </div>
-        <div class="monto">${formatSoles(c.saldo)}</div>
-        <div class="text-muted small mt-1">${c.moneda} · Saldo disponible</div>
+        <div class="monto mt-auto pt-2 fs-2 fw-bold text-dark">${formatSoles(c.saldo)}</div>
+        <div class="text-secondary mt-1 d-flex justify-content-between align-items-end">
+            <span style="font-size:0.85rem">${c.moneda} · Saldo disponible</span>
+            <i class="bi bi-arrow-right-circle-fill text-primary opacity-50 fs-5"></i>
+        </div>
       </div>
     </div>
   `).join('');
@@ -87,39 +93,40 @@ async function cargarTransacciones(user) {
 
   if (!txns || txns.length === 0) {
     txnEl.innerHTML = `
-      <p class="text-muted text-center py-3">Sin movimientos recientes.</p>`;
+      <div class="text-center py-5 fade-in-up delay-2">
+        <i class="bi bi-inbox text-muted fs-1 d-block mb-3"></i>
+        <p class="text-muted fw-medium">Sin movimientos recientes.</p>
+      </div>`;
     return;
   }
 
   txnEl.innerHTML = `
-    <div class="table-responsive">
-      <table class="table table-hover mb-0">
+    <div class="table-responsive fade-in-up delay-2">
+      <table class="table table-borderless table-hover mb-0 align-middle">
         <tbody>
           ${txns.map(t => `
-            <tr>
-              <td class="ps-3">
+            <tr class="txn-row">
+              <td class="ps-3 py-3">
                 <div class="d-flex align-items-center gap-3">
-                  <div class="rounded-circle d-flex align-items-center justify-content-center
-                    ${t.tipo === 'debito' ? 'bg-danger' : 'bg-success'} bg-opacity-10"
-                    style="width:36px;height:36px">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm
+                    ${t.tipo === 'debito' ? 'bg-danger' : 'bg-success'} bg-opacity-10" style="width:42px;height:42px">
                     <i class="bi ${
                       t.tipo === 'debito'
-                        ? 'bi-arrow-up-right text-danger'
-                        : 'bi-arrow-down-left text-success'
-                    }"></i>
+                        ? 'bi-arrow-down-right text-danger'
+                        : 'bi-arrow-up-right text-success'
+                    } fs-5"></i>
                   </div>
                   <div>
-                    <div class="fw-semibold small">${t.descripcion}</div>
-                    <div class="text-muted" style="font-size:.75rem">
-                      ${formatFecha(t.fecha)}
+                    <div class="fw-bold text-dark mb-1">${t.descripcion}</div>
+                    <div class="text-secondary d-flex align-items-center gap-1" style="font-size:0.8rem">
+                      <i class="bi bi-calendar-event"></i> ${formatFecha(t.fecha)}
                     </div>
                   </div>
                 </div>
               </td>
-              <td class="text-end pe-3 align-middle">
-                <span class="${t.tipo === 'debito' ? 'monto-debito' : 'monto-credito'}">
-                  ${t.tipo === 'debito' ? '- ' : '+ '}
-                  ${formatSoles(t.monto)}
+              <td class="text-end pe-4">
+                <span class="${t.tipo === 'debito' ? 'text-danger' : 'text-success'} fs-6 fw-bold">
+                  ${t.tipo === 'debito' ? '-' : '+'} ${formatSoles(t.monto)}
                 </span>
               </td>
             </tr>
